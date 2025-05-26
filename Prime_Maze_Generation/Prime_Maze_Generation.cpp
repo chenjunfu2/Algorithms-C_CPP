@@ -3,28 +3,28 @@
 
 struct Wall_Point
 {
-	long lWallX, lWallY;//Ç½×ø±ê
-	long lRearX, lRearY;//Ç½ºóÃæ×ø±ê
+	long lWallX, lWallY;//å¢™åæ ‡
+	long lRearX, lRearY;//å¢™åé¢åæ ‡
 };
 
 void RemoveWall(std::vector<Wall_Point> &stWallList, const Wall_Point &stNewWall, size_t *szpVctMap, long lVctMapWide, long lVctMapHigh);
 void RemoveWall(std::vector<Wall_Point> &stWallList, size_t szRemoveWallIndex, size_t *szpVctMap, long lVctMapWide, long lVctMapHigh);
 
-long Prime(//³É¹¦·µ»Ø1£¬·µ»Ø-1Îª²ÎÊı´íÎó
-	bool *bpMap,//µØÍ¼
-	long lMapWide,//µØÍ¼³¤¿í±ØĞëÎªÆæÊı
+long Prime(//æˆåŠŸè¿”å›1ï¼Œè¿”å›-1ä¸ºå‚æ•°é”™è¯¯
+	bool *bpMap,//åœ°å›¾
+	long lMapWide,//åœ°å›¾é•¿å®½å¿…é¡»ä¸ºå¥‡æ•°
 	long lMapHigh,
 
-	const Prime_Point &stBegPoint,//ÆğµãÖÕµã±ØĞëÎªÆæÊı×ø±ê
-	const Prime_Point &stEndPoint,//²»Ê¹ÓÃ´Ë²ÎÊıµ«ÊÇ»á½øĞĞ¼ì²é
+	const Prime_Point &stBegPoint,//èµ·ç‚¹ç»ˆç‚¹å¿…é¡»ä¸ºå¥‡æ•°åæ ‡
+	const Prime_Point &stEndPoint,//ä¸ä½¿ç”¨æ­¤å‚æ•°ä½†æ˜¯ä¼šè¿›è¡Œæ£€æŸ¥
 
-	bool bOptimizeStrategy,//ÊÇ·ñÊ¹ÓÃÓÅ»¯²ßÂÔ
+	bool bOptimizeStrategy,//æ˜¯å¦ä½¿ç”¨ä¼˜åŒ–ç­–ç•¥
 
-	Random pfuncRandom,//Éú³ÉËæ»úÊı
-	void *pRandomValue,//ÓÃ»§×Ô¶¨Òå²ÎÊı
+	Random pfuncRandom,//ç”Ÿæˆéšæœºæ•°
+	void *pRandomValue,//ç”¨æˆ·è‡ªå®šä¹‰å‚æ•°
 
-	SearchCallBack pfuncCurrentSearch,//»ñÈ¡µ±Ç°´ò¶´µÄµã
-	void *pCurrentSearchValue)//ÓÃ»§×Ô¶¨Òå²ÎÊı£¨CurrentSearchº¯ÊıÊ¹ÓÃ£©)//Ö®ºó¼ÓÒ»¸öÊÇ·ñÔÊĞíĞ±Ïß´ò¶´,¼ÓÒ»¸öËæ»úº¯Êı,¼ÓÒ»¸ö»ñÈ¡µ±Ç°×´Ì¬µÄº¯Êı
+	SearchCallBack pfuncCurrentSearch,//è·å–å½“å‰æ‰“æ´çš„ç‚¹
+	void *pCurrentSearchValue)//ç”¨æˆ·è‡ªå®šä¹‰å‚æ•°ï¼ˆCurrentSearchå‡½æ•°ä½¿ç”¨ï¼‰)//ä¹‹ååŠ ä¸€ä¸ªæ˜¯å¦å…è®¸æ–œçº¿æ‰“æ´,åŠ ä¸€ä¸ªéšæœºå‡½æ•°,åŠ ä¸€ä¸ªè·å–å½“å‰çŠ¶æ€çš„å‡½æ•°
 {
 	if (bpMap == nullptr)
 	{
@@ -35,7 +35,7 @@ long Prime(//³É¹¦·µ»Ø1£¬·µ»Ø-1Îª²ÎÊı´íÎó
 		stBegPoint.x % 2 == 0 || stBegPoint.y % 2 == 0 ||
 		stEndPoint.x % 2 == 0 || stEndPoint.y % 2 == 0)
 	{
-		return -1;//²»ÊÇÆæÊı
+		return -1;//ä¸æ˜¯å¥‡æ•°
 	}
 
 	if (stBegPoint.x <= 0 || stBegPoint.x >= lMapWide - 1 ||
@@ -43,38 +43,38 @@ long Prime(//³É¹¦·µ»Ø1£¬·µ»Ø-1Îª²ÎÊı´íÎó
 		stEndPoint.x <= 0 || stEndPoint.x >= lMapWide - 1 ||
 		stEndPoint.y <= 0 || stEndPoint.y >= lMapWide - 1)
 	{
-		return -1;//³¬³ö±ß½ç
+		return -1;//è¶…å‡ºè¾¹ç•Œ
 	}
 
 	if (pfuncRandom == nullptr)
 	{
-		return -1;//º¯ÊıÎªnullptr
+		return -1;//å‡½æ•°ä¸ºnullptr
 	}
 
-	//°ÑÕû¸öµØÍ¼ÉèÖÃ³ÉÇ½
+	//æŠŠæ•´ä¸ªåœ°å›¾è®¾ç½®æˆå¢™
 	std::fill<bool *, bool>(bpMap, bpMap + lMapWide * lMapHigh, 1);
 
-	//Ó³Éä±í£¨ÓÅ»¯²ßÂÔ£©
+	//æ˜ å°„è¡¨ï¼ˆä¼˜åŒ–ç­–ç•¥ï¼‰
 	size_t *szpVctMap = nullptr;
 	long lVctMapWide = 0;
 	long lVctMapHigh = 0;
 	if (bOptimizeStrategy)
 	{
-		//¼ÆËãÓ³Éä±í´óĞ¡
+		//è®¡ç®—æ˜ å°„è¡¨å¤§å°
 		lVctMapWide = lMapWide;
 		lVctMapHigh = lMapHigh;
-		//Ç½ÔÚÇ½ÁĞ±íÖĞµÄÓ³Éä
+		//å¢™åœ¨å¢™åˆ—è¡¨ä¸­çš„æ˜ å°„
 		szpVctMap = new(std::nothrow) size_t[lVctMapWide * lVctMapHigh];
-		//´Ë´¦ÎŞĞè¼ì²é£¬ºóĞø¶ÔszpVctMap¶¼»á½øĞĞ¼ì²é£¬Èç¹ûÎªnullptrÖ»ÓĞÁ½ÖÖÇé¿ö£º1.ÓÃ»§²»Ê¹ÓÃÓÅ»¯²ßÂÔ£¬2.·ÖÅäÊ§°Ü£¨¾Íµ±³ÉÓÃ»§²»Ê¹ÓÃÓÅ»¯²ßÂÔ£©
+		//æ­¤å¤„æ— éœ€æ£€æŸ¥ï¼Œåç»­å¯¹szpVctMapéƒ½ä¼šè¿›è¡Œæ£€æŸ¥ï¼Œå¦‚æœä¸ºnullptråªæœ‰ä¸¤ç§æƒ…å†µï¼š1.ç”¨æˆ·ä¸ä½¿ç”¨ä¼˜åŒ–ç­–ç•¥ï¼Œ2.åˆ†é…å¤±è´¥ï¼ˆå°±å½“æˆç”¨æˆ·ä¸ä½¿ç”¨ä¼˜åŒ–ç­–ç•¥ï¼‰
 	}
 
-	//Ç½ÁĞ±í
+	//å¢™åˆ—è¡¨
 	std::vector<Wall_Point> stWallList;
-	//ÉèÖÃµ±Ç°µãÎªÆğµã
+	//è®¾ç½®å½“å‰ç‚¹ä¸ºèµ·ç‚¹
 	Prime_Point stCurrent = stBegPoint;
-	//Æğµã´ò¶´
+	//èµ·ç‚¹æ‰“æ´
 	bpMap[stCurrent.y * lMapWide + stCurrent.x] = 0;
-	//µ÷ÓÃ×´Ì¬º¯Êı
+	//è°ƒç”¨çŠ¶æ€å‡½æ•°
 	if (pfuncCurrentSearch != nullptr)
 	{
 		pfuncCurrentSearch(stCurrent, pCurrentSearchValue);
@@ -82,124 +82,124 @@ long Prime(//³É¹¦·µ»Ø1£¬·µ»Ø-1Îª²ÎÊı´íÎó
 	
 	const struct
 	{
-		long lXconver;//x±ä»»
-		long lYconver;//y±ä»»
+		long lXconver;//xå˜æ¢
+		long lYconver;//yå˜æ¢
 	}stConver[8] =
 	{
-		{ 0,-1 },	//ÉÏ
-		{ 0, 1 },	//ÏÂ
-		{-1, 0 },	//×ó
-		{ 1, 0 },	//ÓÒ
+		{ 0,-1 },	//ä¸Š
+		{ 0, 1 },	//ä¸‹
+		{-1, 0 },	//å·¦
+		{ 1, 0 },	//å³
 	};
 
 	while (true)
 	{
-		//°Ñµ±Ç°µã¸½½üµÄÇ½Ìí¼ÓÈëÇ½ÁĞ±í
+		//æŠŠå½“å‰ç‚¹é™„è¿‘çš„å¢™æ·»åŠ å…¥å¢™åˆ—è¡¨
 		for (long i = 0; i < 4; ++i)
 		{
-			//´Óµ±Ç°µã¹¹Ôì&±ä»»
+			//ä»å½“å‰ç‚¹æ„é€ &å˜æ¢
 			Wall_Point stNewWall;
 
-			//¹¹Ôìµ±Ç°µã£¬¼ÆËãÇ½×ø±ê
+			//æ„é€ å½“å‰ç‚¹ï¼Œè®¡ç®—å¢™åæ ‡
 			stNewWall.lWallX = stCurrent.x + stConver[i].lXconver;
 			stNewWall.lWallY = stCurrent.y + stConver[i].lYconver;
 
-			//Ô½½çÅĞ¶Ï
+			//è¶Šç•Œåˆ¤æ–­
 			if (stNewWall.lWallX < 0 || stNewWall.lWallX >= lMapWide ||
 				stNewWall.lWallY < 0 || stNewWall.lWallY >= lMapHigh)
 			{
-				continue;//²»·ûºÏÒªÇó
+				continue;//ä¸ç¬¦åˆè¦æ±‚
 			}
 
-			//Èç¹ûÕâÃæÇ½ÒÑ¾­ÊÇÂ·ÔòÌø¹ı
+			//å¦‚æœè¿™é¢å¢™å·²ç»æ˜¯è·¯åˆ™è·³è¿‡
 			if (bpMap[stNewWall.lWallY * lMapWide + stNewWall.lWallX] == 0)
 			{
 				continue;
 			}
 
-			//¼ÆËãÇ½±³ºó×ø±ê
+			//è®¡ç®—å¢™èƒŒååæ ‡
 			stNewWall.lRearX = stNewWall.lWallX + stConver[i].lXconver;
 			stNewWall.lRearY = stNewWall.lWallY + stConver[i].lYconver;
 
-			//Ô½½çÅĞ¶Ï
+			//è¶Šç•Œåˆ¤æ–­
 			if (stNewWall.lRearX < 0 || stNewWall.lRearX >= lMapWide ||
-				stNewWall.lRearY < 0 || stNewWall.lRearY >= lMapHigh)//³¬½ç
+				stNewWall.lRearY < 0 || stNewWall.lRearY >= lMapHigh)//è¶…ç•Œ
 			{
-				continue;//²»·ûºÏÒªÇó
+				continue;//ä¸ç¬¦åˆè¦æ±‚
 			}
 
-			//²âÊÔÇ½±³ºóÊÇ²»ÊÇÂ·£¬Èç¹ûÊÇÔòÏÂÒ»ÂÖÑ­»·
+			//æµ‹è¯•å¢™èƒŒåæ˜¯ä¸æ˜¯è·¯ï¼Œå¦‚æœæ˜¯åˆ™ä¸‹ä¸€è½®å¾ªç¯
 			if (bpMap[stNewWall.lRearY * lMapWide + stNewWall.lRearX] == 0)
 			{
-				//ÓÅ»¯²ßÂÔ(Óöµ½²»·ûºÏµÄÇ½Ö±½ÓÉ¾³ı)
+				//ä¼˜åŒ–ç­–ç•¥(é‡åˆ°ä¸ç¬¦åˆçš„å¢™ç›´æ¥åˆ é™¤)
 				if (szpVctMap != nullptr)
 				{
 					RemoveWall(stWallList, stNewWall, szpVctMap, lVctMapWide, lVctMapHigh);
 				}
 
-				continue;//²»·ûºÏÒªÇó
+				continue;//ä¸ç¬¦åˆè¦æ±‚
 			}
 
-			//ĞÂµÄÇ½¼ÓÈëÁĞ±í
+			//æ–°çš„å¢™åŠ å…¥åˆ—è¡¨
 			stWallList.push_back(stNewWall);
 			if (szpVctMap != nullptr)
 			{
-				szpVctMap[stNewWall.lWallY * lVctMapWide + stNewWall.lWallX] = stWallList.size() - 1;//ÉèÖÃwallÔÚx¡¢y×ø±êÏÂµÄÇ½ÁĞ±íË÷Òı
+				szpVctMap[stNewWall.lWallY * lVctMapWide + stNewWall.lWallX] = stWallList.size() - 1;//è®¾ç½®wallåœ¨xã€yåæ ‡ä¸‹çš„å¢™åˆ—è¡¨ç´¢å¼•
 			}
 		}
 
-		//Ã»ÓĞ¶àÓàµÄÇ½ÁË£¬Ëã·¨½áÊø
+		//æ²¡æœ‰å¤šä½™çš„å¢™äº†ï¼Œç®—æ³•ç»“æŸ
 		if (stWallList.empty())
 		{
-			return 1;//½áÊø
+			return 1;//ç»“æŸ
 		}
 
-		//Ëæ»úÌôÇ½´ò¶´
+		//éšæœºæŒ‘å¢™æ‰“æ´
 		size_t szRand = pfuncRandom(0, stWallList.size(), pRandomValue);
 		Wall_Point *stRandWall = &stWallList[szRand];
 
-		if (szpVctMap == nullptr)//Ã»Ê¹ÓÃÓÅ»¯²ßÂÔ
+		if (szpVctMap == nullptr)//æ²¡ä½¿ç”¨ä¼˜åŒ–ç­–ç•¥
 		{
-			while (bpMap[stRandWall->lRearY * lMapWide + stRandWall->lRearX] == 0)//²âÊÔÇ½±³ºóÊÇ²»ÊÇÂ·£¬Èç¹ûÊÇÔòÖØĞÂÌôÇ½
+			while (bpMap[stRandWall->lRearY * lMapWide + stRandWall->lRearX] == 0)//æµ‹è¯•å¢™èƒŒåæ˜¯ä¸æ˜¯è·¯ï¼Œå¦‚æœæ˜¯åˆ™é‡æ–°æŒ‘å¢™
 			{
-				//É¾³ıÇ½
+				//åˆ é™¤å¢™
 				RemoveWall(stWallList, szRand, szpVctMap, lVctMapWide, lVctMapHigh);
 
-				if (stWallList.empty())//Ëã·¨½áÊø
+				if (stWallList.empty())//ç®—æ³•ç»“æŸ
 				{
-					return 1;//½áÊø
+					return 1;//ç»“æŸ
 				}
 
-				//Ëæ»úÏÂÒ»¸ö
+				//éšæœºä¸‹ä¸€ä¸ª
 				szRand = pfuncRandom(0, stWallList.size(), pRandomValue);
 				stRandWall = &stWallList[szRand];
 			}
 		}
-		//·ñÔòÊ¹ÓÃÓÅ»¯²ßÂÔÔòÔÚ±éÀú¿É´ò¶´Ç½µÄ¹ı³Ì¾ÍÒÑ¾­É¾³ı²»ºÏ·¨µÄÇ½ÁË
+		//å¦åˆ™ä½¿ç”¨ä¼˜åŒ–ç­–ç•¥åˆ™åœ¨éå†å¯æ‰“æ´å¢™çš„è¿‡ç¨‹å°±å·²ç»åˆ é™¤ä¸åˆæ³•çš„å¢™äº†
 
-		//´ò¶´
+		//æ‰“æ´
 		bpMap[stRandWall->lRearY * lMapWide + stRandWall->lRearX] = 0;
 		bpMap[stRandWall->lWallY * lMapWide + stRandWall->lWallX] = 0;
 
-		//ÉèÖÃµ±Ç°µã
+		//è®¾ç½®å½“å‰ç‚¹
 		stCurrent.x = stRandWall->lRearX;
 		stCurrent.y = stRandWall->lRearY;
 
-		//µ÷ÓÃ×´Ì¬º¯Êı
+		//è°ƒç”¨çŠ¶æ€å‡½æ•°
 		if (pfuncCurrentSearch != nullptr)
 		{
 			pfuncCurrentSearch({stRandWall->lWallX,stRandWall->lWallY}, pCurrentSearchValue);
 			pfuncCurrentSearch({stRandWall->lRearX,stRandWall->lRearY}, pCurrentSearchValue);
 		}
 
-		//´ò¶´½áÊø£¬°ÑÕâÃæÇ½É¾ÁË
+		//æ‰“æ´ç»“æŸï¼ŒæŠŠè¿™é¢å¢™åˆ äº†
 		RemoveWall(stWallList, szRand, szpVctMap, lVctMapWide, lVctMapHigh);
 
 		//static long i = 0;
 		//printf("%ld ", i++);
 	}
 
-	//ÊÍ·Å
+	//é‡Šæ”¾
 	if (szpVctMap != nullptr)
 	{
 		delete[] szpVctMap;
@@ -215,15 +215,15 @@ void RemoveWall(std::vector<Wall_Point> &stWallList, const Wall_Point &stNewWall
 		return;
 	}
 
-	//É¾³ıºóÃæÒÑ¾­ÊÇÂ·µÄÇ½
-	//°ÑÕâÃæÇ½É¾ÁË£ººÍ×îÎ²²¿ÔªËØ½»»»È»ºópop_backµ¯³ö£¬Í¬Ê±ÉèÖÃÓ³Éä±í
+	//åˆ é™¤åé¢å·²ç»æ˜¯è·¯çš„å¢™
+	//æŠŠè¿™é¢å¢™åˆ äº†ï¼šå’Œæœ€å°¾éƒ¨å…ƒç´ äº¤æ¢ç„¶åpop_backå¼¹å‡ºï¼ŒåŒæ—¶è®¾ç½®æ˜ å°„è¡¨
 	size_t szRemoveWallIndex = szpVctMap[stNewWall.lWallY * lVctMapWide + stNewWall.lWallX];
 	size_t szLastWallIndex = stWallList.size() - 1;
 
-	//Èç¹ûÒªÉ¾³ıµÄ²»ÊÇ×îºóÒ»¸öÔªËØ
+	//å¦‚æœè¦åˆ é™¤çš„ä¸æ˜¯æœ€åä¸€ä¸ªå…ƒç´ 
 	if (szRemoveWallIndex != szLastWallIndex)
 	{
-		//ÉèÖÃ×îºóÒ»¸öÇ½µÄË÷ÒıÎªµ±Ç°ÒªÉ¾³ıÇ½µÄË÷Òı
+		//è®¾ç½®æœ€åä¸€ä¸ªå¢™çš„ç´¢å¼•ä¸ºå½“å‰è¦åˆ é™¤å¢™çš„ç´¢å¼•
 		Prime_Point stLastWall =
 		{
 			stWallList[szLastWallIndex].lWallX,
@@ -231,23 +231,23 @@ void RemoveWall(std::vector<Wall_Point> &stWallList, const Wall_Point &stNewWall
 		};
 
 		szpVctMap[stLastWall.y * lVctMapWide + stLastWall.x] = szRemoveWallIndex;
-		//½»»»
+		//äº¤æ¢
 		std::swap(stWallList[szRemoveWallIndex], stWallList[szLastWallIndex]);
 	}
-	//É¾³ı
+	//åˆ é™¤
 	stWallList.pop_back();
 }
 
 void RemoveWall(std::vector<Wall_Point> &stWallList, size_t szRemoveWallIndex, size_t *szpVctMap, long lVctMapWide, long lVctMapHigh)
 {
-	//Çó³ö×îºóÔªËØË÷Òı
+	//æ±‚å‡ºæœ€åå…ƒç´ ç´¢å¼•
 	size_t szLastWallIndex = stWallList.size() - 1;
-	//²»ÊÇ×îºóÒ»¸öÔªËØÔò½»»»
+	//ä¸æ˜¯æœ€åä¸€ä¸ªå…ƒç´ åˆ™äº¤æ¢
 	if (szRemoveWallIndex != szLastWallIndex)
 	{
 		if (szpVctMap != nullptr)
 		{
-			//ÉèÖÃ×îºóÒ»¸öÇ½µÄË÷ÒıÎªµ±Ç°ÒªÉ¾³ıÇ½µÄË÷Òı
+			//è®¾ç½®æœ€åä¸€ä¸ªå¢™çš„ç´¢å¼•ä¸ºå½“å‰è¦åˆ é™¤å¢™çš„ç´¢å¼•
 			Prime_Point stLastWall =
 			{
 				stWallList[szLastWallIndex].lWallX,
@@ -256,15 +256,15 @@ void RemoveWall(std::vector<Wall_Point> &stWallList, size_t szRemoveWallIndex, s
 
 			szpVctMap[stLastWall.y * lVctMapWide + stLastWall.x] = szRemoveWallIndex;
 		}
-		//½»»»
+		//äº¤æ¢
 		std::swap(stWallList[szRemoveWallIndex], stWallList[szLastWallIndex]);
 	}
-	//É¾³ı
+	//åˆ é™¤
 	stWallList.pop_back();
 }
 
 
-//Ä¬ÈÏËæ»úÊıº¯Êı
+//é»˜è®¤éšæœºæ•°å‡½æ•°
 size_t DefaultRandom(
 	size_t szMin,
 	size_t szMax,
